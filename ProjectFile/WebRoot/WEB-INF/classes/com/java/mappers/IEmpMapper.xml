@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java.mappers.IEmpMapper">
+	<select id="checkLogin"  resultType="com.java.pojo.Emp">
+		select * from emp where emp_account=#{0} and emp_pwd=#{1}
+	</select>
+	
+	<insert id="doInsert" parameterType="com.java.pojo.Emp"> 
+		insert into emp values(#{emp_id},#{emp_name},#{emp_account},#{emp_pwd},#{sex},#{addres},#{phone})
+	</insert>
+	
+	<select id="findAll" resultType="com.java.pojo.Emp">
+		select * from emp
+	</select>
+	
+	<update id="changePwd">
+		update emp set emp_pwd=#{1} where emp_id=#{0}
+	</update>
+	
+	<update id="doUpdate" parameterType="com.java.pojo.Emp">
+		update emp set emp_name=#{emp_name},emp_account=#{emp_account},emp_pwd=#{emp_pwd},sex=#{sex},
+		addres=#{addres},phone=#{phone} where emp_id=#{emp_id}
+	</update>
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java.mappers.ICommodityMapper">
+	<select id="findAll" resultType="com.java.pojo.Commodity">
+		select * from Commodity
+	</select>
+	
+	<insert id="doInsert" parameterType="com.java.pojo.Commodity">
+		insert into commodity values(#{commodity_id},#{commodity_name},#{category_number},
+		#{commodity_type},#{commodity_price},#{production_address},#{remarks_information})
+	</insert>
+
+</mapper>

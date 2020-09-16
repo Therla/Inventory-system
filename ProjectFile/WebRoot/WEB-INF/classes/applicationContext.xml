@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+	
+	<!-- 配置数据库连接池 -->
+	<context:property-placeholder location="classpath:db.properties"/>
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	 <property name="driverClass" value="${jdbc.driver}"></property>
+	 <property name="jdbcUrl" value="${jdbc.url}"></property>
+	 <property name="user" value="${jdbc.username}"></property>
+	 <property name="password" value="${jdbc.password}"></property>
+	</bean>
+	
+	<bean id="factoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+	  <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+	  <property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- 扫描Mapper接口所在包  -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	  <property name="basePackage" value="com.java.mappers"></property>
+	  <property name="sqlSessionFactoryBeanName" value="factoryBean"></property>
+	</bean>
+
+	<!-- 扫描service包 -->
+	<context:component-scan base-package="com.java.service"></context:component-scan>
+	<!-- transactionManager事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+	<tx:attributes>
+		<tx:method name="doInsert" propagation="REQUIRED"/>
+		
+		<tx:method name="doUpdate*" propagation="REQUIRED" />  
+		
+		<tx:method name="doDelete*" propagation="REQUIRED" />  
+		
+		<tx:method name="change*" propagation="REQUIRED" />  
+		
+		<tx:method name="check*" propagation="REQUIRED" />  
+	
+		<tx:method name="*" propagation="REQUIRED" read-only="true" />  
+		</tx:attributes>
+	</tx:advice>
+	<!-- 声明事务切面 -->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.java.service.*.*(..))" id="serviceOperation"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation"/>
+	</aop:config>
+	 
+	 
+	<!-- 配置基于注解的声明式事务 
+	<tx:annotation-drivent ransaction-manager="transactionManager"></tx:annotation-drivent>-->
+</beans>

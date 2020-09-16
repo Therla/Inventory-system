@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java.mappers.IReturnMapper">
+	<select id="findAll" resultType="com.java.pojo.Return">
+		select * from return
+	</select>
+	
+	<insert id="doInsert" parameterType="com.java.pojo.Return">
+		insert into return values(#{commodity_id},#{commodity_name},#{supplier_id},#{return_time},
+		#{price},#{number})
+	</insert>
+	
+</mapper>
